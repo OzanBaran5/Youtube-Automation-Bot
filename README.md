@@ -1,117 +1,117 @@
 <div align="right">
-  <a href="README.md">🇹🇷 Türkçe</a>
+  <a href="README.en.md">🇬🇧 English</a>
 </div>
 
-# 🎬 YouTube Shorts Automation Pipeline
+# 🎬 YouTube Shorts Otomatik Üretim Pipeline
 
-A fully automated Python pipeline that produces and uploads a daily 40–55 second vertical (9:16) YouTube Shorts video on finance literacy and personal development topics.
-
----
-
-## 📋 Table of Contents
-
-1. [System Requirements](#-system-requirements)
-2. [FFmpeg Installation (Windows)](#-ffmpeg-installation-windows)
-3. [Python Setup & Dependencies](#-python-setup--dependencies)
-4. [API Keys Setup](#-api-keys-setup)
-5. [Google OAuth2 Setup](#-google-oauth2-setup)
-6. [Project Structure](#-project-structure)
-7. [Usage](#-usage)
-8. [First Run & OAuth Authorization](#-first-run--oauth-authorization)
-9. [Automated Daily Run with Windows Task Scheduler](#-automated-daily-run-with-windows-task-scheduler)
-10. [Testing Guide](#-testing-guide)
-11. [Troubleshooting](#-troubleshooting)
+Finans okuryazarlığı ve kişisel gelişim konularında **günlük, tam otomatik** 40-55 saniyelik dikey (9:16) YouTube Shorts videosu üreten ve kanalınıza yükleyen Python pipeline.
 
 ---
 
-## 🖥 System Requirements
+## 📋 İçindekiler
 
-- **OS**: Windows 10/11 (64-bit)
-- **Python**: 3.10 or higher ([python.org](https://www.python.org/downloads/))
-- **FFmpeg**: See installation steps below
-- **Internet Connection**: Required for API calls and video downloads
+1. [Sistem Gereksinimleri](#-sistem-gereksinimleri)
+2. [FFmpeg Kurulumu (Windows)](#-ffmpeg-kurulumu-windows)
+3. [Python Kurulumu & Bağımlılıklar](#-python-kurulumu--bağımlılıklar)
+4. [API Anahtarları Kurulumu](#-api-anahtarları-kurulumu)
+5. [Google OAuth2 Kurulumu](#-google-oauth2-kurulumu)
+6. [Proje Yapısı](#-proje-yapısı)
+7. [Kullanım](#-kullanım)
+8. [İlk Çalıştırma & OAuth Yetkilendirme](#-i̇lk-çalıştırma--oauth-yetkilendirme)
+9. [Windows Task Scheduler ile Otomatik Çalıştırma](#-windows-task-scheduler-ile-otomatik-çalıştırma)
+10. [Test Rehberi](#-test-rehberi)
+11. [Sorun Giderme](#-sorun-giderme)
 
 ---
 
-## 🎞 FFmpeg Installation (Windows)
+## 🖥 Sistem Gereksinimleri
 
-> **⚠️ IMPORTANT**: Video rendering and Whisper subtitle generation will not work without FFmpeg.
+- **İşletim Sistemi**: Windows 10/11 (64-bit)
+- **Python**: 3.10 veya üstü ([python.org](https://www.python.org/downloads/))
+- **FFmpeg**: Aşağıdaki kurulum adımlarına bakın
+- **İnternet Bağlantısı**: API çağrıları ve video indirme için
 
-### Step 1 — Download FFmpeg
+---
 
-1. Open your browser and go to:
+## 🎞 FFmpeg Kurulumu (Windows)
+
+> **⚠️ ÖNEMLİ**: FFmpeg kurulmadan video render ve Whisper altyazı adımları çalışmaz.
+
+### Adım 1 — FFmpeg İndir
+
+1. Tarayıcınızı açın ve şu adrese gidin:
    **https://github.com/BtbN/FFmpeg-Builds/releases**
 
-2. In the latest release, under **"Assets"**, download:
+2. En üstteki release'de (en güncel) şu dosyayı indirin:
    ```
    ffmpeg-master-latest-win64-gpl.zip
    ```
-   *(approximately 100–150 MB)*
+   *(yaklaşık 100-150 MB)*
 
-   > Alternative source: **https://ffmpeg.org/download.html** → Windows → gyan.dev builds
+   > Alternatif kaynak: **https://ffmpeg.org/download.html** → Windows → gyan.dev builds
 
-### Step 2 — Extract the ZIP
+### Adım 2 — ZIP Dosyasını Çıkar
 
-1. Right-click the downloaded ZIP → **"Extract All..."**
-2. Set the destination to:
+1. İndirilen ZIP dosyasına sağ tıklayın → **"Tümünü Çıkar..."**
+2. Çıkarma konumu olarak şunu girin (veya kopyalayın):
    ```
    C:\
    ```
-3. Click **"Extract"**.
+3. **"Çıkar"** butonuna tıklayın.
 
-4. The extracted folder will be named something like `ffmpeg-master-latest-win64-gpl`.
-   **Rename** it to: `ffmpeg`
+4. Çıkarılan klasörün adı `ffmpeg-master-latest-win64-gpl` veya benzeri olacak.
+   Bu klasörü **yeniden adlandırın**: `ffmpeg`
 
-   Your directory should look like:
+   Sonuç olarak şu yapıda olmalı:
    ```
    C:\ffmpeg\
      ├── bin\
-     │   ├── ffmpeg.exe    ← This is the important file
+     │   ├── ffmpeg.exe    ← Bu dosya önemli
      │   ├── ffprobe.exe
      │   └── ffplay.exe
      ├── doc\
      └── ...
    ```
 
-### Step 3 — Add to PATH Environment Variable
+### Adım 3 — PATH Ortam Değişkenine Ekle
 
-1. Press **Win + R** → type `sysdm.cpl` → **OK**
+1. **Win + R** tuşlarına basın → `sysdm.cpl` yazın → **Tamam**
 
-2. Click the **"Advanced"** tab → click **"Environment Variables..."**
+2. **"Gelişmiş"** sekmesine tıklayın → **"Ortam Değişkenleri..."** butonuna tıklayın
 
-3. In the **"System variables"** section, find **`Path`** → double-click it
+3. Alt bölümde **"Sistem değişkenleri"** listesinde **`Path`** satırını bulun → üzerine çift tıklayın
 
-4. Click **"New"** in the top-right corner
+4. Açılan pencerede sağ üstteki **"Yeni"** butonuna tıklayın
 
-5. Type:
+5. Şunu yazın:
    ```
    C:\ffmpeg\bin
    ```
 
-6. Click **OK** → **OK** → **OK** to close all windows
+6. **"Tamam"** → **"Tamam"** → **"Tamam"** diyerek tüm pencereleri kapatın
 
-### Step 4 — Verify Installation
+### Adım 4 — Kurulumu Doğrula
 
-Open a **new** PowerShell or Command Prompt window:
+**Yeni** bir PowerShell veya Komut İstemi penceresi açın (mevcut pencereyi kapatıp yeniden açın):
 
 ```powershell
 ffmpeg -version
 ```
 
-You should see output like:
+Aşağıdaki gibi bir çıktı görmelisiniz:
 ```
 ffmpeg version N-xxx-gxxxxxxx Copyright (c) 2000-2024 ...
 ```
 
-✅ If you see this output, FFmpeg is successfully installed.
+✅ Bu çıktıyı görüyorsanız FFmpeg başarıyla kuruldu.
 
 ---
 
-## 🐍 Python Setup & Dependencies
+## 🐍 Python Kurulumu & Bağımlılıklar
 
-### Step 1 — Create a Virtual Environment (Recommended)
+### Adım 1 — Sanal Ortam Oluştur (Önerilir)
 
-Open PowerShell in the project folder:
+Proje klasöründe PowerShell açın:
 
 ```powershell
 cd "c:\Users\pc\Desktop\youtube otomasyon"
@@ -119,65 +119,69 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-> **Note**: If you get a script execution policy error in PowerShell:
+> **Not**: PowerShell'de script çalıştırma politikası hatası alırsanız:
 > ```powershell
 > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 > ```
 
-### Step 2 — Install Dependencies
+### Adım 2 — Bağımlılıkları Yükle
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-> **Note**: Installing `openai-whisper` will also download `torch` (~2 GB). The first install may take a while.
+> **Not**: `openai-whisper` yüklenirken `torch` da indirilir (~2GB). İlk yükleme uzun sürebilir.
 
 ---
 
-## 🔑 API Keys Setup
+## 🔑 API Anahtarları Kurulumu
 
 ### 1. Gemini API Key
 
-1. Go to **https://aistudio.google.com/app/apikey**
-2. Sign in with your Google account
-3. Click **"Create API Key"**
-4. Copy the generated API key
-5. Paste it into the `.env` file under `GEMINI_API_KEY=`
+1. **https://aistudio.google.com/app/apikey** adresine gidin
+2. Google hesabınızla giriş yapın
+3. **"Create API Key"** butonuna tıklayın
+4. Oluşturulan API key'i kopyalayın
+5. `.env` dosyasında `GEMINI_API_KEY=` alanına yapıştırın
 
 ### 2. Pexels API Key
 
-1. Go to **https://www.pexels.com/api/**
-2. Click **"Get Started"** → Sign up (free)
-3. Copy the API key from your dashboard
-4. Paste it into the `.env` file under `PEXELS_API_KEY=`
+1. **https://www.pexels.com/api/** adresine gidin
+2. **"Get Started"** → üye olun (ücretsiz)
+3. Dashboard'dan API key'i kopyalayın
+4. `.env` dosyasında `PEXELS_API_KEY=` alanına yapıştırın
 
 ---
 
-## 🔐 Google OAuth2 Setup
+## 🔐 Google OAuth2 Kurulumu
 
-The same `client_secret.json` file is used for both TTS and YouTube uploads.
+TTS ve YouTube yükleme için kullanılan **aynı** `client_secret.json` dosyası.
 
-### Creating a New OAuth2 Client (if needed)
+### Mevcut Durumunuz
 
-1. Go to **https://console.cloud.google.com**
+Projenizde zaten `client_secret.json` dosyası mevcut. Bu adımları sadece yeni bir OAuth2 client oluşturmanız gerekirse uygulayın.
 
-2. Select your project from the top (or create a new one)
+### Yeni OAuth2 Client Oluşturma (Gerekirse)
 
-3. Left menu → **"APIs & Services"** → **"Library"**
-   - Enable **Google Cloud Text-to-Speech API**
-   - Enable **YouTube Data API v3**
+1. **https://console.cloud.google.com** adresine gidin
 
-4. Left menu → **"APIs & Services"** → **"Credentials"**
+2. Üst kısımdan projenizi seçin (veya yeni oluşturun)
 
-5. Click **"+ CREATE CREDENTIALS"** → **"OAuth client ID"**
+3. Sol menü → **"APIs & Services"** → **"Library"**
+   - **Google Cloud Text-to-Speech API** → Etkinleştir
+   - **YouTube Data API v3** → Etkinleştir
 
-6. Application type: **"Desktop app"** → Name: anything you like → **"Create"**
+4. Sol menü → **"APIs & Services"** → **"Credentials"**
 
-7. Click **"DOWNLOAD JSON"** → save the file
+5. **"+ CREATE CREDENTIALS"** → **"OAuth client ID"**
 
-8. Copy the downloaded file to the project root and rename it to `client_secret.json`
+6. Application type: **"Desktop app"** seçin → Name: istediğiniz isim → **"Create"**
 
-### Check Your `.env` File
+7. **"DOWNLOAD JSON"** butonuna tıklayın → dosyayı indirin
+
+8. İndirilen dosyayı proje klasörüne kopyalayın ve `client_secret.json` olarak kaydedin
+
+### `.env` Dosyasını Kontrol Edin
 
 ```env
 GOOGLE_OAUTH_CLIENT_SECRET_PATH=./client_secret.json
@@ -187,183 +191,184 @@ GOOGLE_YOUTUBE_TOKEN_PATH=./token_youtube.json
 
 ---
 
-## 📁 Project Structure
+## 📁 Proje Yapısı
 
 ```
 youtube otomasyon/
-├── .env                          # API keys (secret — never commit to Git)
-├── .env.example                  # Template .env file
-├── client_secret.json            # Google OAuth2 client (secret)
-├── token_tts.json                # TTS token (auto-generated)
-├── token_youtube.json            # YouTube token (auto-generated)
-├── requirements.txt              # Python dependencies
-├── run_daily.py                  # 🚀 Main pipeline script
+├── .env                          # API anahtarları (gizli, git'e eklemeyin)
+├── .env.example                  # Örnek .env (şablon)
+├── client_secret.json            # Google OAuth2 client (gizli)
+├── token_tts.json                # TTS token (otomatik oluşur)
+├── token_youtube.json            # YouTube token (otomatik oluşur)
+├── requirements.txt              # Python bağımlılıkları
+├── run_daily.py                  # 🚀 Ana pipeline script
 │
 ├── scripts/
-│   ├── config.py                 # Environment variables & path config
-│   ├── logger.py                 # Logging
-│   ├── script_generator.py      # Gemini API → script generation
-│   ├── tts_generator.py         # Google TTS OAuth2 → audio
-│   ├── subtitle_generator.py    # Whisper → ASS subtitles
-│   ├── music_downloader.py      # Royalty-free music downloader
+│   ├── config.py                 # Ortam değişkenleri & yol yapılandırması
+│   ├── logger.py                 # Loglama
+│   ├── script_generator.py      # Gemini API → script üretimi
+│   ├── tts_generator.py         # Google TTS OAuth2 → ses
+│   ├── subtitle_generator.py    # Whisper → ASS altyazı
+│   ├── music_downloader.py      # Telifsiz müzik indirme
 │   ├── video_builder.py         # Pexels + FFmpeg → video render
-│   └── youtube_uploader.py      # YouTube Data API v3 → upload
+│   └── youtube_uploader.py      # YouTube Data API v3 → yükleme
 │
 ├── data/
-│   ├── daily_content.json        # Today's generated content
-│   ├── used_topics.json          # Topic history (prevents repeats)
-│   └── upload_log.csv            # YouTube upload history
+│   ├── daily_content.json        # Günlük üretilen içerik
+│   ├── used_topics.json          # Kullanılmış konu geçmişi
+│   └── upload_log.csv            # YouTube yükleme logu
 │
 ├── output/
-│   └── YYYY-MM-DD_video.mp4     # Final rendered videos
+│   └── YYYY-MM-DD_video.mp4     # Final videolar
 │
 ├── assets/
-│   └── music/                   # Background music tracks (.mp3)
+│   └── music/                   # Arka plan müzikleri (.mp3)
 │
-├── temp/                        # Temporary files (auto-cleaned)
-├── logs/                        # Daily log files
+├── temp/                        # Geçici dosyalar (otomatik temizlenir)
+├── logs/                        # Günlük log dosyaları
 │
 └── tests/
-    ├── test_script_generator.py  # Gemini API test
-    └── test_tts.py              # TTS OAuth2 test
+    ├── test_script_generator.py  # Gemini testi
+    └── test_tts.py              # TTS OAuth2 testi
 ```
 
 ---
 
-## 🚀 Usage
+## 🚀 Kullanım
 
 ```powershell
-# Navigate to the project folder and activate the virtual environment
+# Proje klasörüne git ve sanal ortamı aktif et
 cd "c:\Users\pc\Desktop\youtube otomasyon"
 .\venv\Scripts\Activate.ps1
 
-# Full pipeline (generate video + upload to YouTube)
+# Tam pipeline (video üret + YouTube'a yükle)
 python run_daily.py
 
-# Dry-run: generate video locally, skip upload
+# Dry-run: Sadece local video üret, yükleme yapma
 python run_daily.py --dry-run
 
-# Generate video but skip upload
+# Video üret ama yükleme yapma
 python run_daily.py --skip-upload
 
-# Run with a specific topic
+# Belirli bir konuyla çalıştır
 python run_daily.py --topic "saving habits"
 
-# Use the existing script (skip Gemini API call — useful when quota is exhausted)
-python run_daily.py --use-existing-script
-
-# Help
+# Yardım
 python run_daily.py --help
 ```
 
 ---
 
-## 🔑 First Run & OAuth Authorization
+## 🔑 İlk Çalıştırma & OAuth Yetkilendirme
 
-On the first run, **two separate OAuth authorizations** are required:
+İlk çalıştırmada **iki ayrı OAuth yetkilendirme** yapılır:
 
-### 1. TTS Authorization (first `run_daily.py` or `tests/test_tts.py`)
+### 1. TTS Yetkilendirme (ilk `run_daily.py` veya `tests/test_tts.py`)
 
-1. You'll see this message in the terminal:
+1. Terminalde şu mesajı görürsünüz:
    ```
-   Opening browser for TTS authorization...
+   🌐 Tarayıcı üzerinden TTS yetkilendirmesi açılıyor...
    ```
-2. Your browser will open automatically
-3. Sign in with your Google account
-4. Click **"Allow"** on the consent screen
-5. `token_tts.json` is saved automatically
-6. On subsequent runs, the browser won't open (token auto-refreshes)
+2. Tarayıcınız otomatik açılır
+3. Google hesabınızla giriş yapın
+4. İzin ekranında **"İzin Ver"** tıklayın
+5. `token_tts.json` otomatik oluşturulur
+6. Bir sonraki çalıştırmada tarayıcı açılmaz (token otomatik yenilenir)
 
-### 2. YouTube Authorization (first real upload)
+### 2. YouTube Yetkilendirme (ilk gerçek upload)
 
-Same process, different consent screen → `token_youtube.json` is created.
+Aynı süreç, farklı izin ekranı → `token_youtube.json` oluşturulur.
 
-> **⚠️ Token Expiry**: Google OAuth refresh tokens are generally long-lived.
-> However, if unused for a long time or if security settings change, the token may expire.
-> In that case, the script will display a clear error message asking you to delete the token file.
+> **⚠️ Token Sona Erme**: Google OAuth refresh token'ları genellikle uzun süre geçerlidir.
+> Ancak uzun süre kullanılmazsa veya güvenlik ayarları değişirse token geçersiz olabilir.
+> Bu durumda script açık bir hata mesajı verir ve token dosyasını silmenizi ister.
 
 ---
 
-## ⏰ Automated Daily Run with Windows Task Scheduler
+## ⏰ Windows Task Scheduler ile Otomatik Çalıştırma
 
-To run automatically every morning at 09:00:
+Her gün sabah 09:00'da otomatik çalışması için:
 
-### Step 1 — The Batch Script
+### Adım 1 — Batch Script Oluştur
 
-The file `run_daily_scheduler.bat` is already included in the project. It:
-- Sets the correct working directory
-- Adds FFmpeg to PATH
-- Runs `run_daily.py` and writes output to `logs\scheduler.log`
+Proje klasöründe `run_daily.bat` dosyası oluşturun:
 
-### Step 2 — Set Up Task Scheduler
+```batch
+@echo off
+cd /d "c:\Users\pc\Desktop\youtube otomasyon"
+call venv\Scripts\activate.bat
+python run_daily.py >> logs\scheduler.log 2>&1
+```
 
-1. Press **Win + R** → type `taskschd.msc` → **OK**
+### Adım 2 — Task Scheduler Ayarla
 
-2. In the right panel, click **"Create Basic Task..."**
+1. **Win + R** → `taskschd.msc` → **Tamam**
 
-3. **Name**: `YouTube Shorts Daily` → **Next**
+2. Sağ panelde **"Temel Görev Oluştur..."** tıklayın
 
-4. **Trigger**: `Daily` → **Next**
+3. **Ad**: `YouTube Shorts Daily` → **İleri**
 
-5. **Start time**: `09:00:00` → **Next**
+4. **Tetikleyici**: `Günlük` → **İleri**
 
-6. **Action**: `Start a program` → **Next**
+5. **Başlangıç saati**: `09:00:00` → **İleri**
 
-7. **Program/Script**: Browse and select `run_daily_scheduler.bat`
+6. **Eylem**: `Program başlat` → **İleri**
 
-8. **Start in**:
+7. **Program/Betik**: Browse ile `run_daily.bat` dosyasını seçin
+
+8. **Başlangıç konumu**: 
    ```
    c:\Users\pc\Desktop\youtube otomasyon
    ```
 
-9. **Finish** → **OK**
+9. **Son** → **Tamam**
 
-### Step 3 — Test It
+### Adım 3 — Test Et
 
-Right-click the created task → **"Run"** → check the log file.
+Oluşturulan görevi sağ tıklayın → **"Çalıştır"** → log dosyasını kontrol edin.
 
 ---
 
-## 🧪 Testing Guide
+## 🧪 Test Rehberi
 
-### Test 1 — Gemini Script Generation (no FFmpeg required)
+### Test 1 — Gemini Script Üretimi (FFmpeg gerekmez)
 
 ```powershell
 python tests/test_script_generator.py
 ```
 
-Expected output:
+Beklenen çıktı:
 ```
-Configuration valid.
-JSON cleaning test passed.
-Topic selection test passed.
-Required fields present.
-ALL TESTS PASSED
+✅ Konfigürasyon geçerli.
+✅ JSON temizleme testi geçti.
+✅ Konu seçimi testi geçti.
+✅ Zorunlu alanlar mevcut.
+✅ TÜM TESTLER BAŞARILI
 ```
 
-### Test 2 — TTS OAuth2 (no FFmpeg required)
+### Test 2 — TTS OAuth2 (FFmpeg gerekmez)
 
 ```powershell
 python tests/test_tts.py
 ```
 
-The browser will open on the first run. After granting permission:
+İlk kez çalıştırırken tarayıcı açılacak. İzin verdikten sonra:
 ```
-OAuth2 successful — token: ./token_tts.json
-Audio file created: temp/test_audio.mp3
-ALL TTS TESTS PASSED
+✅ OAuth2 başarılı — token: ./token_tts.json
+✅ Ses dosyası oluşturuldu: temp/test_audio.mp3
+✅ TÜM TTS TESTLERİ BAŞARILI
 ```
 
-### Test 3 — Dry-Run (requires FFmpeg)
+### Test 3 — Dry-Run (FFmpeg kurulduktan sonra)
 
 ```powershell
 python run_daily.py --dry-run
 ```
 
-Runs the full pipeline but skips the YouTube upload.
-The final video is saved to `output/YYYY-MM-DD_video.mp4`.
+Bu test tüm adımları çalıştırır ama YouTube'a yüklemez.
+Final video `output/YYYY-MM-DD_video.mp4` konumunda oluşur.
 
-### Test 4 — Full Pipeline
+### Test 4 — Tam Pipeline
 
 ```powershell
 python run_daily.py
@@ -371,56 +376,52 @@ python run_daily.py
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 Sorun Giderme
 
 ### `ffmpeg: command not found`
-→ Install FFmpeg and add it to PATH (see steps above).
-→ Open a **new** terminal window after updating PATH.
+→ FFmpeg kurulumunu yapın ve PATH'e ekleyin (yukarıdaki adımlara bakın).
+→ Yeni bir terminal penceresi açın (PATH değişikliği mevcut pencerede geçerli olmaz).
 
 ### `GEMINI_API_KEY is missing`
-→ Check that the key is correctly defined in `.env`.
-→ Do not use quotes: `GEMINI_API_KEY=AIzaSy...` (correct)
-
-### `Gemini 429 RESOURCE_EXHAUSTED` (limit: 0)
-→ Your API key's free tier quota is exhausted or not configured.
-→ Create a new key at **https://aistudio.google.com/app/apikey** and update `.env`.
+→ `.env` dosyasında API key'in doğru tanımlandığını kontrol edin.
+→ Tırnak işareti kullanmayın: `GEMINI_API_KEY=AIzaSy...` (doğru)
 
 ### `OAuth client secret not found`
-→ Verify that `client_secret.json` exists in the project root.
-→ Check that the filename is exactly `client_secret.json`.
+→ `client_secret.json` dosyasının proje kökünde olduğunu kontrol edin.
+→ Dosya adının tam olarak `client_secret.json` olduğunu kontrol edin.
 
 ### `TTS token refresh failed`
-→ Delete `token_tts.json` and run the script again.
-→ A new browser authorization will be triggered.
+→ `token_tts.json` dosyasını silin ve tekrar çalıştırın.
+→ Tarayıcı üzerinden yeniden yetkilendirme yapılacak.
 
 ### `YouTube API quota exceeded`
-→ YouTube Data API has a daily quota of 10,000 units (1 upload ≈ 1,600 units).
-→ Try again the next day or check your quota in Google Cloud Console.
+→ YouTube Data API günlük 10.000 unit kotası var (1 upload ≈ 1600 unit).
+→ Ertesi gün tekrar deneyin veya Google Cloud Console'dan kotanızı kontrol edin.
 
-### Pexels videos not found
-→ Verify `PEXELS_API_KEY` is correctly set in `.env`.
-→ Check the `pexels_keyword` field in `data/daily_content.json`.
+### Pexels video bulunamıyor
+→ `PEXELS_API_KEY` doğru tanımlandığını kontrol edin.
+→ Arama terimini `data/daily_content.json` içinde `pexels_keyword` alanından görüntüleyin.
 
-### Whisper is slow
-→ The `base` model can be slow on CPU — this is normal (may take 2–3 minutes).
-→ If you have a GPU: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
-
----
-
-## 📊 Log Files
-
-| File | Contents |
-|------|----------|
-| `logs/YYYY-MM-DD.log` | Detailed daily run log |
-| `data/upload_log.csv` | YouTube upload history (video ID, URL, date) |
-| `data/used_topics.json` | Topic history (prevents repeating topics) |
+### Whisper yavaş çalışıyor
+→ `base` model CPU'da yavaş olabilir. Bu normaldir (2-3 dakika sürebilir).
+→ GPU'nuz varsa: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
 
 ---
 
-## 🛡 Security Notes
+## 📊 Log Dosyaları
 
-- **Never commit** `.env`, `client_secret.json`, `token_tts.json`, or `token_youtube.json` to Git
-- Add them to `.gitignore`:
+| Dosya | İçerik |
+|-------|---------|
+| `logs/YYYY-MM-DD.log` | Günlük detaylı çalışma logu |
+| `data/upload_log.csv` | YouTube yükleme geçmişi (video ID, URL, tarih) |
+| `data/used_topics.json` | Kullanılmış konu geçmişi (tekrar önleme) |
+
+---
+
+## 🛡 Güvenlik Notları
+
+- `.env`, `client_secret.json`, `token_tts.json`, `token_youtube.json` dosyalarını **asla** GitHub'a yüklemeyin
+- Bu dosyaları `.gitignore`'a ekleyin:
   ```
   .env
   client_secret.json
@@ -429,8 +430,8 @@ python run_daily.py
 
 ---
 
-## ⚖️ Legal Notes
+## ⚖️ Yasal Notlar
 
-- All generated content is **for informational purposes only** and does not constitute financial advice
-- Pexels videos are used under the [Pexels License](https://www.pexels.com/license/)
-- Background music tracks are CC0 / public domain licensed
+- Tüm üretilen içerik **genel bilgilendirme amaçlıdır**, finansal tavsiye değildir
+- Pexels videoları [Pexels Lisansı](https://www.pexels.com/license/) kapsamındadır
+- Arka plan müzikleri CC0 / kamu malı lisanslıdır
